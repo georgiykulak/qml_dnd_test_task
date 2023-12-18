@@ -45,11 +45,13 @@ ApplicationWindow {
 
     Dialog {
         id: downloadDialog
-        modal: false
+        modal: true
         standardButtons: Dialog.Cancel
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
         title: "Downloading..."
+
+        property var elemCount
 
         onRejected:{
             console.log("Cancel button pressed")
@@ -57,6 +59,8 @@ ApplicationWindow {
         }
 
         function startDownload(num) {
+            progressBarId.to = num
+            elemCount = num
             console.log("Start downloading")
             downloadDialog.open()
         }
@@ -68,13 +72,23 @@ ApplicationWindow {
 
         function newElement(el) {
             console.log("On new element -> " + el)
-            // TODO: Append element
+            progressBarId.value = el
+
+            if (el === elemCount)
+                downloadDialog.close()
         }
 
         Component.onCompleted:{
             client.startDownload.connect(startDownload)
             client.finishDownload.connect(finishDownload)
             client.elementDownloaded.connect(newElement)
+        }
+
+        ProgressBar {
+            id: progressBarId
+            from: 0
+            value: 0
+            anchors.horizontalCenter: parent.horizontalCenter
         }
     }
 
@@ -97,7 +111,14 @@ ApplicationWindow {
             Keys.onReturnPressed: colorDialog.accept()
         }
 
-        onAccepted:{
+        onAccepted: {
+            console.log("onAccepted")
+
+        }
+
+        Component.onCompleted:{
+            console.log("colorDialog: onCompleted")
+            //client.
         }
     }
 
@@ -130,14 +151,14 @@ ApplicationWindow {
                 height: gridView.cellHeight
 
                 onEntered: function (drag) {
-                    var from = (drag.source as DnD.ColorTile).visualIndex
+                    var from = (drag.source as ColorTile).visualIndex
                     var to = colorTile.visualIndex
                     visualModel.items.move(from, to)
                 }
 
                 onDropped: function (drag) {
                     var from = modelIndex
-                    var to = (drag.source as DnD.ColorTile).visualIndex
+                    var to = (drag.source as ColorTile).visualIndex
                     ColorModel.listOfColorItems.move(from, to)
                 }
 
@@ -148,8 +169,9 @@ ApplicationWindow {
                     width: gridView.cellWidth * 0.95
                     height: gridView.cellHeight * 0.95
                     dragParent: gridView
+                    colorDialogId: colorDialog
                     visualIndex: delegateRoot.visualIndex
-                    color: delegateRoot.color
+                    selectedColor: delegateRoot.color
                     onPressed: delegateRoot.modelIndex = visualIndex
                 }
             }

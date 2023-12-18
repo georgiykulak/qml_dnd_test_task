@@ -19,7 +19,6 @@ Client::Client(ColorModel& model)
 
 Client::~Client()
 {
-    stop();
 }
 
 void Client::run()
@@ -126,6 +125,8 @@ void Client::readData()
     QColor color(colorString);
 
     m_downloadedColors.push_back(color);
+    emit elementDownloaded(m_downloadedColors.size());
+
     std::vector<ColorItem*> vec; // One-time memory-leak, ignore for now
     for (const auto& color : m_downloadedColors)
     {
