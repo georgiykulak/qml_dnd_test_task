@@ -1,8 +1,9 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QtQml>
 #include <QQmlContext>
 #include "Client.h"
-
+#include "MainModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,6 +14,7 @@ int main(int argc, char *argv[])
 
     Client client;
 
+    qmlRegisterType<MainModel>("MainModels", 1, 0, "MainModel");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

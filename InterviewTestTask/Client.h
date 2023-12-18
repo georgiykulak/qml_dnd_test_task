@@ -25,10 +25,13 @@ private slots:
 
 private:
     void connectTcp();
+    void onDisconnected();
+    void sendNextCommands();
     void sendCommand(const QString& command);
     void readData();
 
     QTcpSocket m_socket;
+    bool m_continueDownloading;
 };
 
 #endif // CLIENT_H
