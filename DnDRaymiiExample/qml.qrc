@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>ColorTile.qml</file>
+        <file>ThingTile.qml</file>
+        <file>ThingGrid.qml</file>
     </qresource>
 </RCC>

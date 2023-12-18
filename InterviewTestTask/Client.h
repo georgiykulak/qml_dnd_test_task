@@ -4,12 +4,14 @@
 #include <QObject>
 #include <QTcpSocket>
 
+#include "ColorModel.h"
+
 class Client : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit Client();
+    explicit Client(ColorModel& model);
     ~Client();
     Q_INVOKABLE void run();
     Q_INVOKABLE void stop();
@@ -30,7 +32,9 @@ private:
     void sendCommand(const QString& command);
     void readData();
 
+    ColorModel& m_model;
     QTcpSocket m_socket;
+    std::vector<QColor> m_downloadedColors;
     bool m_continueDownloading;
 };
 

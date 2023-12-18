@@ -5,9 +5,9 @@ QT += quick
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        Client.cpp \
-        ColorItem.cpp \
-        ColorItemListModel.cpp \
+        ThingModel.cpp \
+        Thingie.cpp \
+        ThingieListModel.cpp \
         main.cpp
 
 RESOURCES += qml.qrc
@@ -24,10 +24,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    Client.h \
-    ColorItem.h \
-    ColorItemListModel.h \
-    ColorModel.h \
-    Conf.h
-
-DISTFILES +=
+    ThingModel.h \
+    Thingie.h \
+    ThingieListModel.h

@@ -1,6 +1,7 @@
 #include "Client.h"
 #include "Conf.h"
 
+#include <QColor>
 #include <QDataStream>
 #include <QDebug>
 
@@ -9,7 +10,8 @@
 
 using namespace std::chrono_literals;
 
-Client::Client()
+Client::Client(ColorModel& model)
+    : m_model{model}
 {
     connect(&m_socket, &QTcpSocket::readyRead, this, &Client::readData);
     connect(&m_socket, &QTcpSocket::disconnected, this, &Client::onDisconnected);
@@ -113,10 +115,19 @@ void Client::readData()
     qDebug() << "Client readData: readyRead emitted";
 
     QTextStream stream(&m_socket);
-
-    QByteArray data = m_socket.readAll();
+    QString colorString;
+    stream >> colorString;
     std::this_thread::sleep_for(500ms);
-    qDebug() << "Received data:" << data;
+    qDebug() << "Received data:" << colorString;
 
-    // Append to list
+    QColor color(colorString);
+
+    m_downloadedColors.push_back(color);
+    std::vector<ColorItem*> vec; // One-time memory-leak, ignore for now
+    for (const auto& color : m_downloadedColors)
+    {
+        vec.emplace_back(new ColorItem(color));
+    }
+
+    m_model.setColorItemsVector(vec);
 }

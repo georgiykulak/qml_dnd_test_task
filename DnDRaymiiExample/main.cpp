@@ -1,21 +1,25 @@
+/* Author: Remy van Elst, https://raymii.org
+ * License: GNU AGPLv3
+ */
+
+#include "ThingModel.h"
+//#include "Thingie.h"
+
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtQml>
-#include <QQmlContext>
-#include "Client.h"
-#include "ColorModel.h"
 
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
+
     QGuiApplication app(argc, argv);
 
-    ColorModel* colorModel = new ColorModel;
-    qmlRegisterSingletonInstance<ColorModel>("ColorModels", 1, 0, "ColorModel", colorModel);
+    //qRegisterMetaType<std::vector<Thingie*>>("std::vector<Thingie*>");
+    ThingModel* thingModel = new ThingModel;
+    qmlRegisterSingletonInstance<ThingModel>("org.raymii.ThingModel", 1, 0, "ThingModel", thingModel);
 
-    Client client(*colorModel);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -24,12 +28,7 @@ int main(int argc, char *argv[])
             if (!obj && url == objUrl)
                 QCoreApplication::exit(-1);
         }, Qt::QueuedConnection);
-
-    engine.rootContext()->setContextProperty("client", &client);
     engine.load(url);
-
-    qDebug() << "Start the application!";
-    client.run();
 
     return app.exec();
 }

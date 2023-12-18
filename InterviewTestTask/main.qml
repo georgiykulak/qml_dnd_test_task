@@ -2,7 +2,7 @@ import QtQuick 2.13
 import QtQuick.Controls 2.13
 import QtQuick.Window 2.13
 import QtQml.Models 2.13
-
+import ColorModels 1.0
 
 ApplicationWindow {
     id: application
@@ -45,7 +45,7 @@ ApplicationWindow {
 
     Dialog {
         id: downloadDialog
-        modal: true
+        modal: false
         standardButtons: Dialog.Cancel
         x: (parent.width - width) / 2
         y: (parent.height - height) / 2
@@ -68,13 +68,13 @@ ApplicationWindow {
 
         function newElement(el) {
             console.log("On new element -> " + el)
+            // TODO: Append element
         }
 
         Component.onCompleted:{
             client.startDownload.connect(startDownload)
             client.finishDownload.connect(finishDownload)
             client.elementDownloaded.connect(newElement)
-            //client.run()
         }
     }
 
@@ -102,16 +102,57 @@ ApplicationWindow {
     }
 
     GridView {
-        id: gridView
+        id: root
+        width: 720
+        height: 480
 
         cellWidth: 100
         cellHeight: 100
 
-        anchors.fill: parent
+        displaced: Transition {
+            NumberAnimation {
+                properties: "x,y"
+                easing.type: Easing.OutQuad
+            }
+        }
 
         model: DelegateModel {
             id: visualModel
-            model: client.model
+            model: ColorModel.listOfColorItems
+
+            // each square is both a drag-able item as well as a droparea (to drop items in).
+            delegate: DropArea {
+                id: delegateRoot
+                required property color color
+                property int modelIndex
+
+                width: root.cellWidth
+                height: root.cellHeight
+
+                onEntered: function (drag) {
+                    var from = (drag.source as DnD.ColorTile).visualIndex
+                    var to = colorTile.visualIndex
+                    visualModel.items.move(from, to)
+                }
+
+                onDropped: function (drag) {
+                    var from = modelIndex
+                    var to = (drag.source as DnD.ColorTile).visualIndex
+                    ColorModel.listOfColorItems.move(from, to)
+                }
+
+                property int visualIndex: DelegateModel.itemsIndex
+
+                ColorTile {
+                    id: colorTile
+                    width: root.cellWidth * 0.95
+                    height: root.cellHeight * 0.95
+                    dragParent: root
+                    visualIndex: delegateRoot.visualIndex
+                    color: delegateRoot.color
+                    onPressed: delegateRoot.modelIndex = visualIndex
+                }
+            }
         }
     }
 }
