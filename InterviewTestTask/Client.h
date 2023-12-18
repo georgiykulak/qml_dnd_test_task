@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include <QObject>
+#include <QTcpSocket>
 
 class Client : public QObject
 {
@@ -21,6 +22,12 @@ signals:
 
 private slots:
     void handleNewColor(const QString& color);//slot for handling new color from server
+
+private:
+    void connectTcp();
+    void sendCommand(const QString& command);
+
+    QTcpSocket m_socket;
 };
 
 #endif // CLIENT_H

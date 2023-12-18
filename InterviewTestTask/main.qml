@@ -34,6 +34,7 @@ ApplicationWindow {
 
         function error(t) {
             console.log("Function errorDialog.error called: " + t)
+            errorDialog.open()
         }
 
         Component.onCompleted:{
@@ -57,12 +58,12 @@ ApplicationWindow {
 
         function startDownload(num) {
             console.log("Start downloading")
-
+            downloadDialog.open()
         }
 
         function finishDownload() {
             console.log("Stop downloading")
-
+            downloadDialog.close()
         }
 
         function newElement(el) {
@@ -73,7 +74,7 @@ ApplicationWindow {
             client.startDownload.connect(startDownload)
             client.finishDownload.connect(finishDownload)
             client.elementDownloaded.connect(newElement)
-            client.run()
+            //client.run()
         }
     }
 

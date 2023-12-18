@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     Client client;
-    client.run();
 
 
     QQmlApplicationEngine engine;
@@ -27,6 +26,7 @@ int main(int argc, char *argv[])
     engine.load(url);
 
     qDebug() << "Start the application!";
+    client.run();
 
     return app.exec();
 }
