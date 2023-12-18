@@ -26,6 +26,7 @@ private slots:
 private:
     void connectTcp();
     void sendCommand(const QString& command);
+    void readData();
 
     QTcpSocket m_socket;
 };
