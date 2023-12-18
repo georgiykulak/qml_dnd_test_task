@@ -26,5 +26,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("client", &client);
     engine.load(url);
 
+    qDebug() << "Start the application!";
+
     return app.exec();
 }

@@ -33,9 +33,11 @@ ApplicationWindow {
         }
 
         function error(t) {
+            console.log("Function errorDialog.error called: " + t)
         }
 
         Component.onCompleted:{
+            console.log("Connect the client")
             client.errorSignal.connect(error)
         }
     }
@@ -49,17 +51,22 @@ ApplicationWindow {
         title: "Downloading..."
 
         onRejected:{
+            console.log("Cancel button pressed")
             client.stop()
         }
 
         function startDownload(num) {
+            console.log("Start downloading")
 
         }
+
         function finishDownload() {
+            console.log("Stop downloading")
 
         }
 
         function newElement(el) {
+            console.log("On new element -> " + el)
         }
 
         Component.onCompleted:{
