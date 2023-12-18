@@ -34,8 +34,8 @@ void Client::stop()
     qDebug() << "Client stop: stop downloading...";
 
     m_continueDownloading = false;
+    std::this_thread::sleep_for(100ms);
     sendCommand(STOP_MESSAGE_REQUEST);
-    std::this_thread::sleep_for(500ms);
 
     m_socket.close();
 
@@ -74,9 +74,12 @@ void Client::onDisconnected()
 
 void Client::sendCommand(const QString& command)
 {
-    m_socket.write(command.toUtf8());
-    m_socket.flush();
-    qDebug() << "Client sendCommand: command ->" << command;
+    if (m_socket.state() == QTcpSocket::ConnectedState)
+    {
+        m_socket.write(command.toUtf8());
+        m_socket.waitForBytesWritten(100);
+        qDebug() << "Client sendCommand: command ->" << command;
+    }
 }
 
 void Client::sendNextCommands()
@@ -97,12 +100,12 @@ void Client::sendNextCommands()
 
         std::size_t i = 0;
 
-        while (continueDownloading && i < ITEMS_COUNT)
+        while (continueDownloading && i <= ITEMS_COUNT)
         {
+            std::this_thread::sleep_for(300ms);
             socket.write(NEXT_MESSAGE_REQUEST.toUtf8());
-            socket.flush();
+            socket.waitForBytesWritten(100);
             qDebug() << "Client sendNextCommands: Sending 'next' command, i =" << i;
-            std::this_thread::sleep_for(500ms);
             ++i;
         }
     });
@@ -116,8 +119,8 @@ void Client::readData()
 
     QTextStream stream(&m_socket);
     QString colorString;
+    m_socket.waitForBytesWritten();
     stream >> colorString;
-    std::this_thread::sleep_for(500ms);
     qDebug() << "Received data:" << colorString;
 
     QColor color(colorString);

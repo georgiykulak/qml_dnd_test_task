@@ -1,7 +1,7 @@
 import QtQuick 2.13
 
 Rectangle {
-    id: root
+    id: gridView
     required property Item dragParent
     signal pressed
     signal released
@@ -18,30 +18,30 @@ Rectangle {
     MouseArea {
         id: mouseArea
         anchors.fill: parent
-        drag.target: root
-        onClicked: root.clicked()
-        onPressed: root.pressed()
+        drag.target: gridView
+        onClicked: gridView.clicked()
+        onPressed: gridView.pressed()
         onReleased: {
             parent.Drag.drop()
-            root.released()
+            gridView.released()
         }
     }
 
     Drag.active: mouseArea.drag.active
-    Drag.source: root
-    Drag.hotSpot.x: root.width / 2
-    Drag.hotSpot.y: root.height / 2
+    Drag.source: gridView
+    Drag.hotSpot.x: gridView.width / 2
+    Drag.hotSpot.y: gridView.height / 2
 
     states: [
         State {
             when: mouseArea.drag.active
             ParentChange {
-                target: root
-                parent: root.dragParent
+                target: gridView
+                parent: gridView.dragParent
             }
 
             AnchorChanges {
-                target: root
+                target: gridView
                 anchors.horizontalCenter: undefined
                 anchors.verticalCenter: undefined
             }

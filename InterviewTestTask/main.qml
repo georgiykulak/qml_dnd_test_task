@@ -102,9 +102,9 @@ ApplicationWindow {
     }
 
     GridView {
-        id: root
-        width: 720
-        height: 480
+        id: gridView
+        width: parent.width
+        height: parent.height
 
         cellWidth: 100
         cellHeight: 100
@@ -126,8 +126,8 @@ ApplicationWindow {
                 required property color color
                 property int modelIndex
 
-                width: root.cellWidth
-                height: root.cellHeight
+                width: gridView.cellWidth
+                height: gridView.cellHeight
 
                 onEntered: function (drag) {
                     var from = (drag.source as DnD.ColorTile).visualIndex
@@ -145,9 +145,9 @@ ApplicationWindow {
 
                 ColorTile {
                     id: colorTile
-                    width: root.cellWidth * 0.95
-                    height: root.cellHeight * 0.95
-                    dragParent: root
+                    width: gridView.cellWidth * 0.95
+                    height: gridView.cellHeight * 0.95
+                    dragParent: gridView
                     visualIndex: delegateRoot.visualIndex
                     color: delegateRoot.color
                     onPressed: delegateRoot.modelIndex = visualIndex
