@@ -82,10 +82,8 @@ void ColorItemListModel::move(int from, int to)
         }
 
         beginResetModel();
-        //        beginMoveRows(QModelIndex(), from, from, QModelIndex(), to);
         qDebug() << "model move from: " << from << " to: " << to;
         m_colorItems.move(from, to);
-        //        endMoveRows();
         endResetModel();
     }
 }

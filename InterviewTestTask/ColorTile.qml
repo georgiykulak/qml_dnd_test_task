@@ -61,6 +61,24 @@ Rectangle {
                 anchors.horizontalCenter: undefined
                 anchors.verticalCenter: undefined
             }
+
+            PropertyChanges {
+                target: gridView;
+                scale: 0.5
+                z: 10
+            }
         }
     ]
+
+    Behavior on x {
+        enabled: mouseArea.drag.active
+        NumberAnimation { duration: 10; easing.type: Easing.OutBack }
+    }
+
+    Behavior on y {
+        enabled: mouseArea.drag.active
+        NumberAnimation { duration: 10; easing.type: Easing.OutBack }
+    }
+
+    transitions: Transition { NumberAnimation { property: "scale"; duration: 100 } }
 }
