@@ -14,10 +14,12 @@ public:
 
     Q_INVOKABLE QString printModel() { return m_listOfColorItems.print(); }
     ColorItemListModel* listOfColorItems() { return &m_listOfColorItems; }
-    void changeItemColor(int visualIndex, const QColor& newColor)
-    { m_listOfColorItems.changeItemColor(visualIndex, newColor); }
-    void setColorItemsVector(const std::vector<ColorItem*>& vec)
+
+public slots:
+    void onSetColorItemsVector(const std::vector<ColorItem*>& vec)
     { m_listOfColorItems.updateFromVector(vec); }
+    void onChangeItemColor(int visualIndex, const QColor& newColor)
+    { m_listOfColorItems.changeItemColor(visualIndex, newColor); }
 
 private:
     ColorItemListModel m_listOfColorItems;

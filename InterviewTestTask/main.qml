@@ -132,6 +132,8 @@ ApplicationWindow {
         id: gridView
         width: parent.width
         height: parent.height
+        anchors.verticalCenter: parent.verticalCenter
+        anchors.horizontalCenter: parent.horizontalCenter
 
         cellWidth: 100
         cellHeight: 100

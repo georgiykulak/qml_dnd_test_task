@@ -10,8 +10,7 @@
 
 using namespace std::chrono_literals;
 
-Client::Client(ColorModel& model)
-    : m_model{model}
+Client::Client()
 {
     connect(&m_socket, &QTcpSocket::readyRead, this, &Client::readData);
     connect(&m_socket, &QTcpSocket::disconnected, this, &Client::onDisconnected);
@@ -56,7 +55,7 @@ void Client::tryChangeItemColor(int visualIndex, const QString &colorText)
         return;
     }
 
-    m_model.changeItemColor(visualIndex, newColor);
+    emit changeItemColor(visualIndex, newColor);
 }
 
 void Client::handleNewColor(const QString &color)
@@ -150,5 +149,5 @@ void Client::readData()
         vec.emplace_back(new ColorItem(color));
     }
 
-    m_model.setColorItemsVector(vec);
+    emit setColorItemsVector(vec);
 }

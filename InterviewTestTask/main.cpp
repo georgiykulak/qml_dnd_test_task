@@ -2,6 +2,8 @@
 #include <QQmlApplicationEngine>
 #include <QtQml>
 #include <QQmlContext>
+#include <QObject>
+
 #include "Client.h"
 #include "ColorModel.h"
 
@@ -15,7 +17,12 @@ int main(int argc, char *argv[])
     ColorModel* colorModel = new ColorModel;
     qmlRegisterSingletonInstance<ColorModel>("ColorModels", 1, 0, "ColorModel", colorModel);
 
-    Client client(*colorModel);
+    Client client;
+
+    QObject::connect(&client, &Client::setColorItemsVector,
+                     colorModel, &ColorModel::onSetColorItemsVector);
+    QObject::connect(&client, &Client::changeItemColor,
+                     colorModel, &ColorModel::onChangeItemColor);
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
