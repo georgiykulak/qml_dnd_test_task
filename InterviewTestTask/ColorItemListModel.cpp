@@ -6,11 +6,12 @@ ColorItemListModel::ColorItemListModel(QObject *parent)
     : QAbstractListModel{parent}
 {}
 
-void ColorItemListModel::updateFromVector(std::vector<ColorItem *> newColorItems)
+void ColorItemListModel::updateFromVector(
+    const std::vector<std::shared_ptr<ColorItem>>& newColorItems)
 {
     beginResetModel();
     m_colorItems.clear();
-    for (const auto &item : newColorItems)
+    for (auto&& item : newColorItems)
     {
         m_colorItems << item;
     }
@@ -30,7 +31,10 @@ QVariant ColorItemListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    const ColorItem* colorItem = m_colorItems[index.row()];
+    auto colorItem = m_colorItems[index.row()];
+    if (colorItem == nullptr)
+        return QVariant();
+
     switch (role)
     {
     case ColorRole:

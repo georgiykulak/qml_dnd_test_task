@@ -5,6 +5,8 @@
 
 #include <QAbstractListModel>
 
+#include <memory>
+
 class ColorItemListModel : public QAbstractListModel
 {
     Q_OBJECT
@@ -17,7 +19,7 @@ public:
 
     explicit ColorItemListModel(QObject *parent = nullptr);
 
-    void updateFromVector(std::vector<ColorItem*> newColorItems);
+    void updateFromVector(const std::vector<std::shared_ptr<ColorItem>>& newColorItems);
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -28,7 +30,7 @@ public:
     Q_INVOKABLE QString print();
 
 private:
-    QList<ColorItem*> m_colorItems;
+    QList<std::shared_ptr<ColorItem>> m_colorItems;
 };
 
 #endif // COLORITEMLISTMODEL_H

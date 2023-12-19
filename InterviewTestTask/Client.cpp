@@ -18,7 +18,6 @@ Client::Client()
 
 Client::~Client()
 {
-    stop();
 }
 
 void Client::run()
@@ -36,7 +35,8 @@ void Client::stop()
     std::this_thread::sleep_for(100ms);
     sendCommand(STOP_MESSAGE_REQUEST);
 
-    m_socket.close();
+    if (m_socket.state() != QTcpSocket::ClosingState)
+        m_socket.close();
 
     emit finishDownload();
 }
@@ -132,6 +132,9 @@ void Client::readData()
 {
     qDebug() << "Client readData: readyRead emitted";
 
+    if (!m_socket.isReadable())
+        return;
+
     QTextStream stream(&m_socket);
     QString colorString;
     m_socket.waitForBytesWritten();
@@ -143,10 +146,10 @@ void Client::readData()
     m_downloadedColors.push_back(color);
     emit elementDownloaded(m_downloadedColors.size());
 
-    std::vector<ColorItem*> vec; // One-time memory-leak, ignore for now
+    std::vector<std::shared_ptr<ColorItem>> vec;
     for (const auto& color : m_downloadedColors)
     {
-        vec.emplace_back(new ColorItem(color));
+        vec.emplace_back(std::make_shared<ColorItem>(color));
     }
 
     emit setColorItemsVector(vec);

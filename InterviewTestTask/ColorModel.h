@@ -1,8 +1,11 @@
 #ifndef COLORMODEL_H
 #define COLORMODEL_H
 
-#include <QObject>
 #include "ColorItemListModel.h"
+
+#include <QObject>
+
+#include <memory>
 
 class ColorItem;
 class ColorModel : public QObject
@@ -16,7 +19,7 @@ public:
     ColorItemListModel* listOfColorItems() { return &m_listOfColorItems; }
 
 public slots:
-    void onSetColorItemsVector(const std::vector<ColorItem*>& vec)
+    void onSetColorItemsVector(const std::vector<std::shared_ptr<ColorItem>>& vec)
     { m_listOfColorItems.updateFromVector(vec); }
     void onChangeItemColor(int visualIndex, const QColor& newColor)
     { m_listOfColorItems.changeItemColor(visualIndex, newColor); }

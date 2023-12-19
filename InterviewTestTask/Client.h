@@ -23,7 +23,7 @@ signals:
     void elementDownloaded(int count);//signal which is sent when elements is downloaded. num - number of downloaded element
     void errorSignal(const QString& err);//signal which is sent when error occured. err - error text
 
-    void setColorItemsVector(const std::vector<ColorItem*>& vec);
+    void setColorItemsVector(const std::vector<std::shared_ptr<ColorItem>>& vec);
     void changeItemColor(int visualIndex, const QColor& newColor);
 
 private slots:
