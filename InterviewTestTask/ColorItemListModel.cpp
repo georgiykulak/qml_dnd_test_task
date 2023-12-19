@@ -60,6 +60,16 @@ int ColorItemListModel::rowCount(const QModelIndex &) const
     return m_colorItems.count();
 }
 
+void ColorItemListModel::changeItemColor(int visualIndex, const QColor &newColor)
+{
+    if (visualIndex >= 0 && visualIndex < rowCount())
+    {
+        beginResetModel();
+        m_colorItems[visualIndex]->setColor(newColor);
+        endResetModel();
+    }
+}
+
 void ColorItemListModel::move(int from, int to)
 {
     if (from >= 0 && from < rowCount()

@@ -102,6 +102,8 @@ ApplicationWindow {
         y: (parent.height - height) / 2
         focus: true
 
+        property int colorTileVisualIndex: 0
+
         TextInput {
             id: inputText
             text: "color"
@@ -114,11 +116,15 @@ ApplicationWindow {
         onAccepted: {
             console.log("onAccepted")
 
+            client.tryChangeItemColor(colorTileVisualIndex, inputText.text)
+        }
+
+        onColorTileVisualIndexChanged: {
+            console.log("Setted index = " + colorTileVisualIndex)
         }
 
         Component.onCompleted:{
             console.log("colorDialog: onCompleted")
-            //client.
         }
     }
 

@@ -15,6 +15,7 @@ public:
     ~Client();
     Q_INVOKABLE void run();
     Q_INVOKABLE void stop();
+    Q_INVOKABLE void tryChangeItemColor(int visualIndex, const QString& colorText);
 
 signals:
     void startDownload(int num);//signal which is sent when downloading is starting. num - number of elements fro downloading

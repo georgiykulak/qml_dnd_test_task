@@ -32,6 +32,7 @@ Rectangle {
             else
             {
                 console.log("right click")
+                colorDialogId.colorTileVisualIndex = visualIndex
                 colorDialogId.open()
             }
         }

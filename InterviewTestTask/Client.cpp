@@ -19,6 +19,7 @@ Client::Client(ColorModel& model)
 
 Client::~Client()
 {
+    stop();
 }
 
 void Client::run()
@@ -39,6 +40,23 @@ void Client::stop()
     m_socket.close();
 
     emit finishDownload();
+}
+
+void Client::tryChangeItemColor(int visualIndex, const QString &colorText)
+{
+    qDebug() << "Client tryChangeItemColor: visualIndex =" << visualIndex
+             << "text =" << colorText;
+
+    QColor newColor(colorText);
+
+    if (!newColor.isValid())
+    {
+        qDebug() << "Client tryChangeItemColor: Invalid color"
+                 << colorText << ", not changing color";
+        return;
+    }
+
+    m_model.changeItemColor(visualIndex, newColor);
 }
 
 void Client::handleNewColor(const QString &color)
@@ -73,7 +91,7 @@ void Client::onDisconnected()
 
 void Client::sendCommand(const QString& command)
 {
-    if (m_socket.state() == QTcpSocket::ConnectedState)
+    if (m_continueDownloading && m_socket.state() == QTcpSocket::ConnectedState)
     {
         m_socket.write(command.toUtf8());
         m_socket.waitForBytesWritten(100);
