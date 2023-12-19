@@ -91,7 +91,7 @@ void Client::onDisconnected()
 
 void Client::sendCommand(const QString& command)
 {
-    if (m_continueDownloading && m_socket.state() == QTcpSocket::ConnectedState)
+    if (m_continueDownloading.load() && m_socket.state() == QTcpSocket::ConnectedState)
     {
         m_socket.write(command.toUtf8());
         m_socket.waitForBytesWritten(100);
@@ -103,9 +103,8 @@ void Client::sendNextCommands()
 {
     qintptr socketDesrciptor = m_socket.socketDescriptor();
     auto socketState = m_socket.state();
-    const bool& continueDownloading = m_continueDownloading;
 
-    std::thread thr([socketDesrciptor, socketState, &continueDownloading]()
+    std::thread thr([socketDesrciptor, socketState](std::atomic_bool& cd)
     {
         QTcpSocket socket;
         if (!socket.setSocketDescriptor(socketDesrciptor, socketState))
@@ -117,7 +116,7 @@ void Client::sendNextCommands()
 
         std::size_t i = 0;
 
-        while (continueDownloading && i <= ITEMS_COUNT)
+        while (cd && i <= ITEMS_COUNT)
         {
             std::this_thread::sleep_for(300ms);
             socket.write(NEXT_MESSAGE_REQUEST.toUtf8());
@@ -125,7 +124,7 @@ void Client::sendNextCommands()
             qDebug() << "Client sendNextCommands: Sending 'next' command, i =" << i;
             ++i;
         }
-    });
+    }, std::ref(m_continueDownloading));
 
     thr.detach();
 }

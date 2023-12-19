@@ -36,7 +36,7 @@ private:
     ColorModel& m_model;
     QTcpSocket m_socket;
     std::vector<QColor> m_downloadedColors;
-    bool m_continueDownloading;
+    std::atomic_bool m_continueDownloading;
 };
 
 #endif // CLIENT_H
